@@ -11,17 +11,11 @@
     makeCoffee(shots: number): CoffeeCup;
   }
 
-  interface CommercialCoffeeMaker {
-    makeCoffee(shots: number): CoffeeCup;
-    fillCoffeeBeans(beans: number): void;
-    clean(): void;
-  }
-
-  class CoffeeMachine implements CoffeeMaker, CommercialCoffeeMaker {
+  class CoffeeMachine implements CoffeeMaker {
     private static BEANS_GRAM_PER_SHOT = 7;
     private coffeeBeans: number = 0;
 
-    private constructor(coffeeBeans: number) {
+    constructor(coffeeBeans: number) {
       this.coffeeBeans = coffeeBeans;
     }
 
@@ -67,26 +61,34 @@
     }
   }
 
-  class AmateurUser {
-    constructor(private machine: CoffeeMaker) {}
-    makeCoffee() {
-      const coffee = this.machine.makeCoffee(2);
+  // inheritance using extends
+  class CafeLatteMachine extends CoffeeMachine {
+    constructor(beans: number, public readonly serialNumber: string) {
+      super(beans);
+    }
+    private steamMilk(): void {
+      console.log('Steaming Milk');
+    }
+    makeCoffee(shots: number): CoffeeCup {
+      const coffee = super.makeCoffee(shots);
+      this.steamMilk();
+      return {
+        ...coffee,
+        hasMilk: true,
+      };
     }
   }
 
-  class ProBarista {
-    constructor(private machine: CommercialCoffeeMaker) {}
-    makeCoffee() {
-      const coffee = this.machine.makeCoffee(2);
-      console.log(coffee);
-      this.machine.fillCoffeeBeans(45);
-      this.machine.clean();
-    }
-  }
-
-  const maker: CommercialCoffeeMaker = CoffeeMachine.makeMachine(32);
-  const amateur = new AmateurUser(maker);
-  const pro = new ProBarista(maker);
-  amateur.makeCoffee();
-  pro.makeCoffee();
+  const latteMachine = new CafeLatteMachine(25, 'SSSS');
+  const coffee = latteMachine.makeCoffee(1);
+  console.log(coffee);
+  console.log(latteMachine.serialNumber);
+  /**
+   * grinding beans for 1
+   * heating up... 🔥
+   * Pulling 1 shots...
+   * Steaming Milk
+   * {shots: 1, hasMilk: true}
+   * SSSS
+   */
 }
