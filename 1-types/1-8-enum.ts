@@ -16,6 +16,7 @@ const dayOfToday = DAYS_ENUM.MONDAY;
 
 // TypeScript
 // if not specifies value, it starts from 0
+// BAD
 enum Days {
   Monday = 1,
   Tuesday,
@@ -27,3 +28,8 @@ enum Days {
 }
 console.log(Days.Tuesday);
 const day = Days.Saturday;
+
+// GOOD
+type DaysOfWeek = 'Monday' | 'Tuesday' | 'Wednesday';
+let dayOfWeek: DaysOfWeek = 'Monday';
+// dayOfWeek = 'youngjun'; // error
